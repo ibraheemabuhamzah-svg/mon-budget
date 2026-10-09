@@ -168,10 +168,47 @@ body {
   background: var(--color-bg);
 }
 
+.btn-lien {
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: var(--color-primary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 4px 0;
+  text-align: left;
+  align-self: flex-start;
+}
+
+.btn-lien:hover {
+  text-decoration: underline;
+}
+
 .form-erreur {
   color: var(--color-danger);
   font-size: 0.85rem;
   margin: -4px 0 12px;
+}
+
+.nouvelle-categorie {
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 14px;
+  margin: -4px 0 14px;
+  background: var(--color-bg);
+}
+
+.form-row-couleur input[type="color"] {
+  padding: 2px;
+  height: 38px;
+  width: 64px;
+  cursor: pointer;
+}
+
+.nouvelle-categorie-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
 }
 
 .chart-wrapper {

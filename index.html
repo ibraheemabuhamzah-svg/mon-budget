@@ -47,6 +47,23 @@
           <div class="form-row">
             <label for="categorie">Catégorie</label>
             <select id="categorie" name="categorie" required></select>
+            <button type="button" id="bouton-nouvelle-categorie" class="btn-lien">+ Nouvelle catégorie</button>
+          </div>
+
+          <div id="form-nouvelle-categorie" class="nouvelle-categorie" hidden>
+            <div class="form-row">
+              <label for="nouvelle-categorie-nom">Nom de la catégorie</label>
+              <input type="text" id="nouvelle-categorie-nom" placeholder="Ex. Cadeaux">
+            </div>
+            <div class="form-row form-row-couleur">
+              <label for="nouvelle-categorie-couleur">Couleur</label>
+              <input type="color" id="nouvelle-categorie-couleur" value="#6366f1">
+            </div>
+            <p id="nouvelle-categorie-erreur" class="form-erreur" role="alert" hidden></p>
+            <div class="nouvelle-categorie-actions">
+              <button type="button" id="nouvelle-categorie-creer" class="btn-secondaire">Créer</button>
+              <button type="button" id="nouvelle-categorie-annuler" class="btn-lien">Annuler</button>
+            </div>
           </div>
 
           <div class="form-row">

@@ -11,7 +11,8 @@ Application web permettant de gérer un budget personnel : suivi des dépenses e
   - une catégorie
   - une date
   - une description
-- **Catégories** : alimentation, logement, transport, loisirs, santé, learning, cobden, lma, kickboxing, deen, umma combat, communication, autres
+- **Catégories par défaut** : alimentation, logement, transport, loisirs, santé, learning, cobden, lma, kickboxing, deen, umma combat, communication, autres
+- **Catégories personnalisées** : l'utilisateur peut créer ses propres catégories directement depuis le formulaire d'ajout (bouton « + Nouvelle catégorie » : nom + couleur), sans toucher au code ; elles sont immédiatement disponibles partout (formulaire, filtre, badges, graphiques)
 - **Devise** : les montants sont affichés en Livres Sterling (£)
 - **Tableau de bord** :
   - solde actuel (revenus - dépenses)
@@ -67,11 +68,11 @@ Pas de build, pas de bundler : les fichiers sont servis tels quels. `index.html`
   6. `ui.js` — dépend de `Storage`, `Transactions`, `Categories`
   7. `app.js` — dépend de `Storage`, `Transactions`, `UI`, `BudgetChart`
 - **Séparation des responsabilités** :
-  - `categories.js` : **source unique de vérité** pour la liste des catégories (`{ cle, libelle, couleur }`). Expose `LISTE`, `obtenirLibelle(cle)`, `obtenirCouleur(cle)` (fallback gris `#9ca3af` si la clé est inconnue) et `peuplerSelect(select, { avecOptionToutes })` qui génère dynamiquement les `<option>` d'un `<select>`.
+  - `categories.js` : **source unique de vérité** pour la liste des catégories (`{ cle, libelle, couleur }`). Combine en interne `CATEGORIES_PAR_DEFAUT` (13 entrées codées en dur) et les catégories personnalisées persistées dans `localStorage` sous la clé `budget_categories_personnalisees`. Expose `obtenirLibelle(cle)`, `obtenirCouleur(cle)` (fallback gris `#9ca3af` si la clé est inconnue), `peuplerSelect(select, { avecOptionToutes })` qui génère dynamiquement les `<option>` d'un `<select>`, et `ajouterCategorie(libelle, couleur)` qui génère la clé (slug), valide (nom non vide, pas de doublon), persiste et retourne `{ succes: true, categorie }` ou `{ succes: false, erreur }`.
   - `storage.js` : seul module qui touche `localStorage`. Expose `getTransactions`, `saveTransactions`, `addTransaction`, `deleteTransaction`, `CLE_STOCKAGE`. `addTransaction`/`saveTransactions` retournent `false`/`null` si l'écriture échoue (quota dépassé, navigation privée) — l'appelant doit vérifier le retour.
   - `transactions.js` : logique métier pure, sans DOM — `calculerSolde`, `totauxParCategorie(liste, type)`, `filtrerTransactions`. Ignore silencieusement les entrées avec un `montant` non numérique ; un `categorie` manquant est compté sous `"autres"`. Facilement testable isolément.
   - `chart.js` : encapsule les deux instances Chart.js (dépenses/revenus) dans une structure `CHARTS` interne, gère l'état vide par graphique, délègue libellés/couleurs à `Categories`.
-  - `ui.js` : tout le rendu DOM et les écouteurs d'événements du formulaire et des filtres. Construit l'historique via `createElement`/`textContent` (jamais `innerHTML` avec des données utilisateur) pour éviter toute injection. Expose aussi `lireFiltres()` et `formaterMontant()` pour réutilisation par `app.js`/`chart.js`.
+  - `ui.js` : tout le rendu DOM et les écouteurs d'événements du formulaire, des filtres et de la création de catégories (`initGestionCategories()` : ouvre/ferme le mini-formulaire inline, appelle `Categories.ajouterCategorie`, repeuple les deux `<select>` de catégorie et présélectionne la nouvelle catégorie en cas de succès). Construit l'historique via `createElement`/`textContent` (jamais `innerHTML` avec des données utilisateur) pour éviter toute injection. Expose aussi `lireFiltres()` et `formaterMontant()` pour réutilisation par `app.js`/`chart.js`.
   - `app.js` : orchestrateur. Définit une fonction `render()` qui relit `Storage.getTransactions()`, calcule la liste filtrée une seule fois (`Transactions.filtrerTransactions(liste, UI.lireFiltres())`) et la transmet à la fois à l'historique et aux graphiques — **les deux restent donc cohérents avec les filtres actifs** ; seul le solde utilise la liste complète non filtrée. Écoute aussi l'événement `storage` pour se resynchroniser si l'utilisateur a l'app ouverte dans un autre onglet. **Pas d'état en mémoire** : le DOM est entièrement redérivé de `localStorage` à chaque changement (pattern re-render complet, pas de mise à jour incrémentale du DOM).
 - **Modèle de données** (une transaction) :
   ```js
@@ -91,7 +92,10 @@ Pas de build, pas de bundler : les fichiers sont servis tels quels. `index.html`
 
 ### Ajouter une catégorie
 
-Les catégories ont une **source unique de vérité** : `js/categories.js`. Ajouter une entrée au tableau `LISTE` (`{ cle, libelle, couleur }`) suffit — les deux `<select>` (formulaire et filtre), les libellés et couleurs des badges, et les libellés/couleurs des graphiques Chart.js en sont tous dérivés automatiquement au chargement. Mettre à jour la liste des catégories dans ce fichier (section Fonctionnalités) en complément, pour la documentation.
+Deux façons, selon qui en a besoin :
+
+- **Depuis l'application** (utilisateur final) : bouton « + Nouvelle catégorie » sous le select catégorie du formulaire d'ajout. Persistée dans `localStorage` (`budget_categories_personnalisees`), disponible immédiatement partout (selects, badges, graphiques), sans toucher au code.
+- **Catégorie par défaut, codée en dur** (développeur) : ajouter une entrée au tableau `CATEGORIES_PAR_DEFAUT` dans `js/categories.js` (`{ cle, libelle, couleur }`) — les deux `<select>`, les badges et les graphiques en dérivent automatiquement au chargement, comme pour les catégories personnalisées. Mettre à jour la liste des catégories par défaut dans ce fichier (section Fonctionnalités) en complément, pour la documentation.
 
 ## Notes d'implémentation
 
@@ -102,6 +106,7 @@ Les catégories ont une **source unique de vérité** : `js/categories.js`. Ajou
 - Validation du formulaire : montant strictement positif, date obligatoire, messages d'erreur en français affichés inline. Un échec d'écriture dans `localStorage` (quota dépassé, navigation privée) affiche aussi une erreur inline plutôt que d'échouer silencieusement.
 - Si le JSON stocké dans `localStorage` est corrompu, une copie de secours est conservée sous une clé horodatée (`budget_transactions_corrompu_<timestamp>`) avant de repartir sur une liste vide.
 - L'app se resynchronise automatiquement si les données changent dans un autre onglet (écoute de l'événement `storage`).
+- Les catégories personnalisées (`budget_categories_personnalisees`) sont stockées séparément des transactions (`budget_transactions`) et des catégories par défaut (codées en dur) ; la génération de clé slugifie le nom saisi (minuscule, sans accent, tirets) et refuse les doublons avec une catégorie existante (par défaut ou personnalisée).
 
 ## Lancer le projet en local
 

@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   UI.initFormulaire(render);
   UI.initFiltres(render);
+  UI.initGestionCategories();
 
   window.addEventListener("storage", (event) => {
     if (event.key === Storage.CLE_STOCKAGE || event.key === null) {

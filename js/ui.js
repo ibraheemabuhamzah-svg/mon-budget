@@ -58,6 +58,51 @@ const UI = (() => {
     });
   }
 
+  function initGestionCategories() {
+    const bouton = document.getElementById("bouton-nouvelle-categorie");
+    const formulaire = document.getElementById("form-nouvelle-categorie");
+    const champNom = document.getElementById("nouvelle-categorie-nom");
+    const champCouleur = document.getElementById("nouvelle-categorie-couleur");
+    const erreur = document.getElementById("nouvelle-categorie-erreur");
+
+    function fermerFormulaire() {
+      formulaire.hidden = true;
+      bouton.hidden = false;
+      champNom.value = "";
+      erreur.hidden = true;
+    }
+
+    function rafraichirSelects(cleSelectionnee) {
+      Categories.peuplerSelect(document.getElementById("categorie"));
+      Categories.peuplerSelect(document.getElementById("filtre-categorie"), { avecOptionToutes: true });
+      if (cleSelectionnee) {
+        document.getElementById("categorie").value = cleSelectionnee;
+      }
+    }
+
+    bouton.addEventListener("click", () => {
+      bouton.hidden = true;
+      formulaire.hidden = false;
+      champNom.focus();
+    });
+
+    document.getElementById("nouvelle-categorie-annuler").addEventListener("click", fermerFormulaire);
+
+    document.getElementById("nouvelle-categorie-creer").addEventListener("click", () => {
+      erreur.hidden = true;
+      const resultat = Categories.ajouterCategorie(champNom.value, champCouleur.value);
+
+      if (!resultat.succes) {
+        erreur.textContent = resultat.erreur;
+        erreur.hidden = false;
+        return;
+      }
+
+      rafraichirSelects(resultat.categorie.cle);
+      fermerFormulaire();
+    });
+  }
+
   function afficherSolde(liste) {
     const solde = Transactions.calculerSolde(liste);
     const element = document.getElementById("solde");
@@ -141,5 +186,13 @@ const UI = (() => {
     });
   }
 
-  return { initFormulaire, afficherSolde, afficherHistorique, initFiltres, lireFiltres, formaterMontant };
+  return {
+    initFormulaire,
+    initGestionCategories,
+    afficherSolde,
+    afficherHistorique,
+    initFiltres,
+    lireFiltres,
+    formaterMontant,
+  };
 })();
