@@ -39,18 +39,18 @@ Application web permettant de gérer un budget personnel : suivi des dépenses e
 ```
 Application-Budget/
 ├── CLAUDE.md
-├── index.html              # page unique : structure, formulaire, graphiques, historique
+├── index.html              # page unique : structure, formulaire, graphiques, historique, balises meta/SEO
+├── favicon.svg             # icône du site (SVG inline, couleur primaire de l'app)
+├── .gitignore
 ├── css/
 │   └── style.css           # design system (variables CSS), layout, composants
-├── js/
-│   ├── categories.js       # source unique de vérité : liste des catégories (clé, libellé, couleur)
-│   ├── storage.js          # accès localStorage (CRUD transactions)
-│   ├── transactions.js     # logique métier pure (solde, totaux, filtres)
-│   ├── chart.js            # intégration Chart.js (graphiques dépenses/revenus)
-│   ├── ui.js                # rendu DOM (formulaire, solde, historique, filtres)
-│   └── app.js               # point d'entrée : câblage des modules, boucle de rendu
-└── .claude/
-    └── launch.json          # config serveur de dev (python3 -m http.server 8787)
+└── js/
+    ├── categories.js       # source unique de vérité : liste des catégories (clé, libellé, couleur)
+    ├── storage.js          # accès localStorage (CRUD transactions)
+    ├── transactions.js     # logique métier pure (solde, totaux, filtres)
+    ├── chart.js            # intégration Chart.js (graphiques dépenses/revenus)
+    ├── ui.js                # rendu DOM (formulaire, solde, historique, filtres)
+    └── app.js               # point d'entrée : câblage des modules, boucle de rendu
 ```
 
 Pas de build, pas de bundler : les fichiers sont servis tels quels. `index.html` charge les scripts en balises `<script>` classiques, dans l'ordre de dépendance (voir plus bas).
@@ -115,4 +115,12 @@ cd Application-Budget
 python3 -m http.server 8787
 ```
 
-Puis ouvrir `http://localhost:8787/index.html`. Un chargement direct en `file://` casse le chargement du CDN Chart.js et des chemins relatifs dans certains contextes (ex. prévisualisation sandboxée) — toujours passer par un serveur HTTP local. La config `.claude/launch.json` permet de relancer ce serveur facilement depuis l'outil de prévisualisation.
+Puis ouvrir `http://localhost:8787/index.html`. Un chargement direct en `file://` casse le chargement du CDN Chart.js et des chemins relatifs dans certains contextes (ex. prévisualisation sandboxée) — toujours passer par un serveur HTTP local.
+
+## Déploiement
+
+- **Hébergement** : [GitHub Pages](https://ibraheemabuhamzah-svg.github.io/mon-budget/), servi depuis la branche `main` du dépôt [mon-budget](https://github.com/ibraheemabuhamzah-svg/mon-budget) (public — condition nécessaire à GitHub Pages sur un compte gratuit).
+- **Données sensibles** : aucune — pas de clé API, token, mot de passe ni information personnelle dans le code (vérifié par recherche sur le dépôt). Toutes les données utilisateur (transactions, catégories personnalisées) restent exclusivement dans le `localStorage` du navigateur de chacun, jamais envoyées à un serveur.
+- **Images** : aucune image bitmap dans le projet. Seul `favicon.svg` (icône du site, inline SVG) est chargé en asset statique, référencé en chemin relatif.
+- **SEO de base** (dans `index.html`) : `<meta name="description">`, `<meta name="robots" content="index, follow">`, `<link rel="canonical">`, balises Open Graph (`og:title`, `og:description`, `og:url`, `og:type`, `og:locale`, `og:image`) et Twitter Card (`twitter:card`, `twitter:title`, `twitter:description`), `<meta name="theme-color">` assorti à `--color-primary`. L'URL canonique et `og:url` pointent vers l'URL GitHub Pages ci-dessus — à mettre à jour si le site change d'URL/domaine.
+- **Responsive** : vérifié sur le déploiement réel à 375px (mobile) — formulaire, graphiques (doughnut Chart.js dans un conteneur à largeur max 320px) et filtres s'affichent sans débordement, grâce au breakpoint `@media (max-width: 720px)` dans `css/style.css`.
