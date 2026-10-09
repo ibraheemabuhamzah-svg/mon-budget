@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon Budget</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <h1>Mon Budget</h1>
+    </header>
+
+    <main class="app-main">
+      <section class="card card-solde" aria-label="Solde actuel">
+        <h2>Solde actuel</h2>
+        <p id="solde" class="solde-montant">0,00 £</p>
+        <div class="solde-totaux">
+          <div class="solde-total">
+            <span class="solde-total-label">Total des revenus</span>
+            <span id="total-revenus" class="solde-total-montant revenu">0,00 £</span>
+          </div>
+          <div class="solde-total">
+            <span class="solde-total-label">Total des dépenses</span>
+            <span id="total-depenses" class="solde-total-montant depense">0,00 £</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="card card-formulaire" aria-label="Ajouter une transaction">
+        <h2>Ajouter une transaction</h2>
+        <form id="form-transaction">
+          <div class="form-row">
+            <label for="type">Type</label>
+            <select id="type" name="type" required>
+              <option value="depense">Dépense</option>
+              <option value="revenu">Revenu</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <label for="montant">Montant (£)</label>
+            <input type="number" id="montant" name="montant" step="0.01" min="0.01" required>
+          </div>
+
+          <div class="form-row">
+            <label for="categorie">Catégorie</label>
+            <select id="categorie" name="categorie" required></select>
+          </div>
+
+          <div class="form-row">
+            <label for="date">Date</label>
+            <input type="date" id="date" name="date" required>
+          </div>
+
+          <div class="form-row">
+            <label for="description">Description</label>
+            <input type="text" id="description" name="description" placeholder="Ex. Courses de la semaine">
+          </div>
+
+          <p id="form-erreur" class="form-erreur" role="alert" hidden></p>
+
+          <button type="submit" class="btn-principal">Ajouter</button>
+        </form>
+      </section>
+
+      <section class="card card-chart" aria-label="Répartition des dépenses par catégorie">
+        <h2>Répartition des dépenses par catégorie</h2>
+        <div class="chart-wrapper">
+          <canvas id="chart-depenses"></canvas>
+          <p id="chart-depenses-vide" class="etat-vide" hidden>Aucune dépense à afficher.</p>
+        </div>
+      </section>
+
+      <section class="card card-chart" aria-label="Répartition des revenus par catégorie">
+        <h2>Répartition des revenus par catégorie</h2>
+        <div class="chart-wrapper">
+          <canvas id="chart-revenus"></canvas>
+          <p id="chart-revenus-vide" class="etat-vide" hidden>Aucun revenu à afficher.</p>
+        </div>
+      </section>
+
+      <section class="card card-historique" aria-label="Historique des transactions">
+        <h2>Historique</h2>
+
+        <div class="filtres">
+          <div class="form-row">
+            <label for="filtre-type">Type</label>
+            <select id="filtre-type">
+              <option value="">Tous</option>
+              <option value="depense">Dépenses</option>
+              <option value="revenu">Revenus</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <label for="filtre-categorie">Catégorie</label>
+            <select id="filtre-categorie"></select>
+          </div>
+
+          <div class="form-row">
+            <label for="filtre-date-debut">Du</label>
+            <input type="date" id="filtre-date-debut">
+          </div>
+
+          <div class="form-row">
+            <label for="filtre-date-fin">Au</label>
+            <input type="date" id="filtre-date-fin">
+          </div>
+
+          <button type="button" id="filtre-reset" class="btn-secondaire">Réinitialiser</button>
+        </div>
+
+        <ul id="liste-transactions" class="liste-transactions"></ul>
+        <p id="historique-vide" class="etat-vide" hidden>Aucune transaction ne correspond.</p>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <script src="js/categories.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/transactions.js"></script>
+  <script src="js/chart.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

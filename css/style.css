@@ -1,0 +1,279 @@
+:root {
+  --color-bg: #f5f6fa;
+  --color-surface: #ffffff;
+  --color-text: #1f2430;
+  --color-text-muted: #6b7280;
+  --color-border: #e5e7eb;
+  --color-primary: #4f46e5;
+  --color-primary-hover: #4338ca;
+  --color-success: #16a34a;
+  --color-danger: #dc2626;
+  --color-on-accent: #fff;
+  --radius: 10px;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.app {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px 16px 64px;
+}
+
+.app-header h1 {
+  font-size: 1.75rem;
+  margin: 0 0 24px;
+}
+
+.app-main {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+
+.card h2 {
+  font-size: 1.05rem;
+  margin: 0 0 16px;
+  color: var(--color-text);
+}
+
+.card-solde {
+  grid-column: 1 / -1;
+  text-align: center;
+}
+
+.solde-montant {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.solde-montant.positif {
+  color: var(--color-success);
+}
+
+.solde-montant.negatif {
+  color: var(--color-danger);
+}
+
+.solde-totaux {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-top: 12px;
+}
+
+.solde-total {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.solde-total-label {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.solde-total-montant {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.solde-total-montant.revenu {
+  color: var(--color-success);
+}
+
+.solde-total-montant.depense {
+  color: var(--color-danger);
+}
+
+.card-historique {
+  grid-column: 1 / -1;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 14px;
+}
+
+.form-row label {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.form-row input,
+.form-row select {
+  padding: 8px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-size: 0.95rem;
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.form-row input:focus,
+.form-row select:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 1px;
+}
+
+.btn-principal,
+.btn-secondaire {
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.btn-principal {
+  background: var(--color-primary);
+  color: var(--color-on-accent);
+  width: 100%;
+}
+
+.btn-principal:hover {
+  background: var(--color-primary-hover);
+}
+
+.btn-secondaire {
+  background: transparent;
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+  align-self: flex-end;
+}
+
+.btn-secondaire:hover {
+  background: var(--color-bg);
+}
+
+.form-erreur {
+  color: var(--color-danger);
+  font-size: 0.85rem;
+  margin: -4px 0 12px;
+}
+
+.chart-wrapper {
+  position: relative;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.filtres {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr) auto;
+  gap: 12px;
+  align-items: end;
+  margin-bottom: 16px;
+}
+
+.liste-transactions {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.transaction {
+  display: grid;
+  grid-template-columns: 90px 1fr 110px 110px auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+}
+
+.transaction-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-on-accent);
+  background: var(--color-text-muted);
+  text-align: center;
+}
+
+.transaction-description {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.transaction-montant {
+  font-weight: 600;
+  text-align: right;
+}
+
+.transaction-montant.depense {
+  color: var(--color-danger);
+}
+
+.transaction-montant.revenu {
+  color: var(--color-success);
+}
+
+.transaction-date {
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+}
+
+.btn-supprimer {
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.btn-supprimer:hover {
+  color: var(--color-danger);
+}
+
+.etat-vide {
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: 24px 0;
+}
+
+@media (max-width: 720px) {
+  .app-main {
+    grid-template-columns: 1fr;
+  }
+
+  .filtres {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .transaction {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .transaction-montant {
+    text-align: left;
+  }
+}
